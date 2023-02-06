@@ -1,0 +1,42 @@
+---
+ - name: Configure ec2 instance with Apach and custom timezone
+   hosts: all
+   become: true
+   remote_user: ubuntu 
+   gather_facts: yes
+   
+   
+   
+   tasks:
+     - name: Update all packages
+       apt: 
+         name: "*"
+         state: latest
+         update_cache: yes
+
+     - name : Install Apache2
+       apt: 
+         name: apache2
+         state: present
+
+
+     - name: Set timezone to Africa/Lagos
+       timezone: 
+         name: Africa/Lagos
+
+
+     - name: create a simple HTML page 
+       copy:
+         content: |
+           <html>
+             <head>
+               <title>Welcome to my webservers</title>
+             </head>
+             <body>
+               <h1>This is my ec2 instance {{inventory_hostname}}<h1>
+             </body>
+            </html>
+         dest: /var/www/html/index.html
+         owner: www-data
+         group: www-data
+         mode: 0644
